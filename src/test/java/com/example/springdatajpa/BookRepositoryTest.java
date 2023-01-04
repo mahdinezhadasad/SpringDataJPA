@@ -1,6 +1,7 @@
 package com.example.springdatajpa;
 
 
+import com.example.springdatajpa.dao.BookDao;
 import com.example.springdatajpa.domain.Book;
 import com.example.springdatajpa.repositories.BookRepository;
 import org.junit.jupiter.api.Test;
@@ -9,8 +10,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,6 +33,9 @@ public class BookRepositoryTest {
     
     @Autowired
     BookRepository bookRepository;
+    
+    @Autowired
+    BookDao bookDao;
     
 
     
@@ -102,5 +109,14 @@ public class BookRepositoryTest {
         
         Book book = bookRepository.jpaNamed ("Clean Code");
         assertThat (book).isNotNull ();
+    }
+    
+    @Test
+    void findAllBooksPage1_SortByTitle(){
+        List<Book> books = bookDao.findAllBooksSortByTitle (PageRequest.of(0,10,Sort.by(Sort.Order.desc ("title"))));
+        
+        assertThat(books).isNotNull();
+        assertThat (books.size ()).isEqualTo (5);
+        
     }
 }

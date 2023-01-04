@@ -3,8 +3,11 @@ package com.example.springdatajpa.dao;
 import com.example.springdatajpa.domain.Author;
 import com.example.springdatajpa.repositories.AuthorRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Component
 public class AuthorDaoImpl implements AuthorDao {
@@ -48,4 +51,12 @@ public class AuthorDaoImpl implements AuthorDao {
         authorRepository.deleteById (id);
         
     }
+    
+    
+    @Override
+    public List<Author> findAllAuthorByLastName(String lastname, Pageable pageable) {
+        return authorRepository.findAuthorByLastName (lastname ,pageable).getContent ();
+    }
+    
+ 
 }
